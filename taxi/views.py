@@ -79,7 +79,7 @@ def car_detail_view(request: HttpRequest, pk: int) -> HttpResponse:
         "car": car,
         "user_driver": user_driver,
     }
-    return render(request, "taxi/car_detail.html",  context=context)
+    return render(request, "taxi/car_detail.html", context=context)
 
 
 class CarCreateView(LoginRequiredMixin, generic.CreateView):
@@ -124,7 +124,3 @@ class DriverUpdateLicenseView(LoginRequiredMixin, generic.UpdateView):
     model = Driver
     success_url = reverse_lazy("taxi:driver-list")
     form_class = DriverLicenseUpdateForm
-
-
-
-
