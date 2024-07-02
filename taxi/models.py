@@ -1,5 +1,3 @@
-import re
-
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.db import models
@@ -21,7 +19,13 @@ class Manufacturer(models.Model):
 class Driver(AbstractUser):
     license_number = models.CharField(max_length=255,
                                       unique=True,
-                                      )
+                                      validators=[RegexValidator(
+                                          regex=r"^[A-Z]{3}\d{5}$",
+                                          message=("License must consist of "
+                                                   "8 characters: the first 3 "
+                                                   "uppercase letters and "
+                                                   "the last 5 digits.")
+                                      )])
 
     class Meta:
         verbose_name = "driver"

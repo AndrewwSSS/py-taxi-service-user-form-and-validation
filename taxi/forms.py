@@ -12,13 +12,9 @@ class DriverCreateForm(UserCreationForm):
         model = Driver
         fields = UserCreationForm.Meta.fields + ("license_number",)
 
-    def validate_license_number(self):
-        breakpoint()
-        license_number: str = self.cleaned_data["license_number"]
-        pattern = re.compile(r"^[A-Z]{3}\d{5}$")
-
-        if not re.match(pattern, license_number):
-            raise ValidationError("Invalid license number format 1")
+    def clean_license_number(self):
+        license_number = self.cleaned_data["license_number"]
+        return validate_license(license_number)
 
 
 class DriverLicenseUpdateForm(ModelForm):
@@ -27,8 +23,13 @@ class DriverLicenseUpdateForm(ModelForm):
         fields = ("license_number",)
 
     def clean_license_number(self):
-        license_number: str = self.cleaned_data["license_number"]
-        pattern = re.compile(r"^[A-Z]{3}\d{5}$")
+        license_number = self.cleaned_data["license_number"]
+        return validate_license(license_number)
 
-        if not re.match(pattern, license_number):
-            raise ValidationError("Invalid license number format 2")
+
+def validate_license(license_number: str) -> str:
+    pattern = re.compile(r"^[A-Z]{3}\d{5}$")
+
+    if not re.match(pattern, license_number):
+        raise ValidationError("Invalid license number format 2")
+    return license_number
