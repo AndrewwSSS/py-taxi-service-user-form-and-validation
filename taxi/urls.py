@@ -51,7 +51,7 @@ urlpatterns = [
     path(
         "drivers/create",
         DriverCreateView.as_view(),
-        name="driver-crete"
+        name="driver-create"
     ),
     path(
         "drivers/<int:pk>/delete",

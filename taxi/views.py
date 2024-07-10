@@ -1,12 +1,14 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpRequest
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import DriverCreateForm, DriverLicenseUpdateForm
-from .models import Driver, Car, Manufacturer
+from .models import (Driver,
+                     Car,
+                     Manufacturer)
 
 
 @login_required
@@ -60,12 +62,9 @@ class CarListView(LoginRequiredMixin, generic.ListView):
     queryset = Car.objects.all().select_related("manufacturer")
 
 
-# class CarDetailView(LoginRequiredMixin, generic.DetailView):
-#     model = Car
-
-@login_required()
+@login_required
 def car_detail_view(request: HttpRequest, pk: int) -> HttpResponse:
-    car = Car.objects.prefetch_related("drivers").filter(pk=pk).first()
+    car = get_object_or_404(Car, pk=pk)
     user_driver = request.user in car.drivers.all()
 
     if request.method == "POST":
